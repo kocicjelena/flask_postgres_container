@@ -1,0 +1,124 @@
+version: '3.5'
+#  modify the pg_hba.conf file
+services:
+  psql:
+    container_name: psql
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    hostname: psql
+    environment:
+       POSTGRES_USER: jelena
+       POSTGRES_PASSWORD: jelena
+       POSTGRES_DB: jelena_db
+       pgdata: /var/lib/postgresql/data
+    
+    volumes:
+          - ./psql:/usr/src/app/psql
+          - /usr/src/app/psql
+          - pgdata:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    networks:
+        - row
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:5.5
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8080:80"
+    depends_on:
+      - psql
+      # :
+      #   condition: service_healthy
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - row
+  flaskr: 
+    build:
+      context: .
+      dockerfile: ./flaskr/Dockerfile.flask
+    # build:
+    #   context: app
+    #   target: dev-envs
+    stop_signal: SIGINT
+    ports: 
+      - '5000:5000'
+   # volumes:
+     # - /var/run/docker.sock:/var/run/docker.sock
+    #restart: always
+    depends_on:
+      - psql
+    networks:
+      - row
+
+  # web:
+  #   build: .
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./app/:/home/app/
+  #   depends_on:
+  #    - db
+  # db_init:
+  #   container_name: db
+  #   volumes:
+  #         - ./db:/usr/src/app/db
+  #         - /usr/src/app/db
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.db_init
+    
+  #   depends_on:
+  #         - psql
+  #   networks:
+  #     - r
+
+
+ 
+
+  # fast:
+  #   container_name: fast
+  #   volumes:
+  #         - ./fast:/usr/src/full/fast
+  #          # - /usr/src/app/fast
+  #   ports:
+  #     - 9000:9000
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.fast
+
+    
+  #   restart: always
+  #   depends_on:
+  #     - psql
+  #   networks:
+  #     - r
+
+  
+
+
+ 
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.react
+  #   ports:
+  #     - "3000:3000"
+  #   container_name: app
+    # volumes:
+    #    - ./app:/usr/src/app
+    #    - /usr/src/app/node_modules
+
+networks:
+  row:
+    name: row
+volumes:
+ pgdata:
+ pgadmin-data: 

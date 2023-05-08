@@ -1,0 +1,10 @@
+
+
+postgres:
+  POSTGRES_USER: 'jelena'
+  POSTGRES_PASSWORD: 'jelena'
+  host: 'psql'
+  port: 5432
+  POSTGRES_DB: 'jelena_db'
+  pgdata: '/var/lib/postgresql/data/app'
+  DATABASE_URL: 'postgresql+psycopg2://jelena:jelena@psql/jelena_db'

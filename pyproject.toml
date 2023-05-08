@@ -1,0 +1,26 @@
+[project]
+name = "flaskr"
+version = "1.0.0"
+description = "flask"
+readme = "README.rst"
+license = {text = "BSD-3-Clause"}
+
+dependencies = [
+    "flask",
+]
+
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+source = ["flaskr", "tests"]
